@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import QRCode from 'qrcode';
+import { Player } from '@lottiefiles/react-lottie-player';
 
 function Qrcode() {
+  const [loading, setLoading] = useState();
   const [url, setUrl] = useState('');
   const [qr, setQr] = useState('');
   const staticQrcode = '/image/static-qrcode.png';
 
   const GenerateQRCode = () => {
+    setLoading(true);
     QRCode.toDataURL(
       url,
       {
@@ -16,7 +19,10 @@ function Qrcode() {
       (error, url) => {
         if (error) return console.error(error);
         console.log(url);
-        setQr(url);
+        setTimeout(() => {
+          setLoading(false);
+          setQr(url);
+        }, 1500);
       }
     );
   };
@@ -47,7 +53,16 @@ function Qrcode() {
         </div>
       </div>
       <div className="lg:w-1/2 flex flex-col items-center lg:items-end">
-        <div className="w-64 h-64 mt-10 border border-gray-400 md:mt-24 lg:w-96 lg:h-96 lg:mt-0">
+        <div className="w-64 relative h-64 mt-10 border border-gray-400 md:mt-24 lg:w-96 lg:h-96 lg:mt-0">
+          {loading && (
+            <Player
+              autoplay
+              loop
+              className="absolute w-full h-full"
+              background="rgba(0, 0, 0, 0.4)"
+              src="https://assets7.lottiefiles.com/packages/lf20_t9gkkhz4.json"
+            ></Player>
+          )}
           <img src={qr ? qr : staticQrcode} />
         </div>
         <div className="rounded-md flex justify-center mt-6 w-64 lg:w-96">
